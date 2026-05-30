@@ -134,6 +134,14 @@
         vm="true">
       <description>Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.</description>
     </setupTask>
+    <setupTask
+        xsi:type="setup:EclipseIniTask"
+        filter="(kieler.useExistingRepositories=true)"
+        option="-Dkieler.useExistingRepositories"
+        value="=true"
+        vm="true">
+      <description>Keep clone tasks disabled when the installed Eclipse performs startup setup tasks.</description>
+    </setupTask>
   </setupTask>
   <setupTask
       xsi:type="setup:CompoundTask"
@@ -204,9 +212,27 @@
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
+      xsi:type="setup:VariableTask"
+      type="BOOLEAN"
+      name="kieler.useExistingRepositories"
+      defaultValue="false"
+      storageURI="scope://Workspace"
+      label="Use existing repositories">
+    <description>Skip Git clone tasks and import projects from the configured repository locations.</description>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:VariableTask"
+      type="FOLDER"
+      name="git.clone.semantics.location"
+      filter="(kieler.useExistingRepositories=true)"
+      storageURI="scope://Workspace"
+      label="Existing semantics repository location">
+    <description>The absolute folder location where the existing semantics repository is located.</description>
+  </setupTask>
+  <setupTask
       xsi:type="git:GitCloneTask"
       id="git.clone.semantics"
-      filter=""
+      filter="(!(kieler.useExistingRepositories=true))"
       remoteURI="kieler/semantics"
       pushURI=""
       checkoutBranch="${git.clone.semantics.branch}">
@@ -2367,8 +2393,27 @@
         xsi:type="setup:CompoundTask"
         name="Additional Git Repositories">
       <setupTask
+          xsi:type="setup:VariableTask"
+          type="FOLDER"
+          name="git.clone.pragmatics.location"
+          filter="(kieler.useExistingRepositories=true)"
+          storageURI="scope://Workspace"
+          label="Existing Pragmatics repository location">
+        <description>The absolute folder location where the existing Pragmatics repository is located.</description>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:VariableTask"
+          type="FOLDER"
+          name="git.clone.klighd.location"
+          filter="(kieler.useExistingRepositories=true)"
+          storageURI="scope://Workspace"
+          label="Existing KLighD repository location">
+        <description>The absolute folder location where the existing KLighD repository is located.</description>
+      </setupTask>
+      <setupTask
           xsi:type="git:GitCloneTask"
           id="git.clone.pragmatics"
+          filter="(!(kieler.useExistingRepositories=true))"
           remoteURI="git@github.com:kieler/pragmatics.git"
           pushURI=""
           checkoutBranch="master">
@@ -2377,6 +2422,7 @@
       <setupTask
           xsi:type="git:GitCloneTask"
           id="git.clone.klighd"
+          filter="(!(kieler.useExistingRepositories=true))"
           remoteURI="git@github.com:kieler/KLighD.git"
           pushURI=""
           checkoutBranch="master">
@@ -2630,8 +2676,45 @@
         xsi:type="setup:CompoundTask"
         name="Additional Git Repositories">
       <setupTask
+          xsi:type="setup:VariableTask"
+          type="FOLDER"
+          name="git.clone.pragmatics.elk.location"
+          filter="(kieler.useExistingRepositories=true)"
+          storageURI="scope://Workspace"
+          label="Existing Pragmatics repository location">
+        <description>The absolute folder location where the existing Pragmatics repository is located.</description>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:VariableTask"
+          type="FOLDER"
+          name="git.clone.klighd.elk.location"
+          filter="(kieler.useExistingRepositories=true)"
+          storageURI="scope://Workspace"
+          label="Existing KLighD repository location">
+        <description>The absolute folder location where the existing KLighD repository is located.</description>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:VariableTask"
+          type="FOLDER"
+          name="git.clone.elk.location"
+          filter="(kieler.useExistingRepositories=true)"
+          storageURI="scope://Workspace"
+          label="Existing ELK repository location">
+        <description>The absolute folder location where the existing ELK repository is located.</description>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:VariableTask"
+          type="FOLDER"
+          name="git.clone.elk.models.location"
+          filter="(kieler.useExistingRepositories=true)"
+          storageURI="scope://Workspace"
+          label="Existing ELK models repository location">
+        <description>The absolute folder location where the existing ELK models repository is located.</description>
+      </setupTask>
+      <setupTask
           xsi:type="git:GitCloneTask"
           id="git.clone.pragmatics.elk"
+          filter="(!(kieler.useExistingRepositories=true))"
           remoteURI="git@github.com:kieler/pragmatics.git"
           pushURI=""
           checkoutBranch="master">
@@ -2640,6 +2723,7 @@
       <setupTask
           xsi:type="git:GitCloneTask"
           id="git.clone.klighd.elk"
+          filter="(!(kieler.useExistingRepositories=true))"
           remoteURI="git@github.com:kieler/KLighD.git"
           pushURI=""
           checkoutBranch="master">
@@ -2648,6 +2732,7 @@
       <setupTask
           xsi:type="git:GitCloneTask"
           id="git.clone.elk"
+          filter="(!(kieler.useExistingRepositories=true))"
           remoteURI="git@github.com:eclipse/elk.git"
           checkoutBranch="master">
         <description>Clone ELK repository</description>
@@ -2655,6 +2740,7 @@
       <setupTask
           xsi:type="git:GitCloneTask"
           id="git.clone.elk.models"
+          filter="(!(kieler.useExistingRepositories=true))"
           remoteURI="git@github.com:eclipse/elk-models.git"
           checkoutBranch="master">
         <description>Clone ELK models repository</description>
